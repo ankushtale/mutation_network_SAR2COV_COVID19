@@ -1,4 +1,5 @@
 import itertools
+import matplotlib.pylab as plt
 
 available_genome_sequences = ["wuhan", "philippines"]
 codon_wheel = {
@@ -146,4 +147,20 @@ def check_for_neutral_mutations(genome):
             amino_acid_sequence[codon] = neutral_mutations
             codon = nucleotide.upper()
 
+    x, y = zip(*sorted(amino_acid_sequence.items()))
+    plt.plot(x, y)
+    plt.xticks(x, x, rotation='vertical')
+    plt.savefig("plots/neutral_amino_acid_count_per_codon.jpg")
+    plt.show()
+
     return amino_acid_sequence
+
+
+def mutation_network(amino_acid_seq, n_mutations):
+    if n_mutations is None:
+        n_mutations = 0
+
+    for codon in amino_acid_seq:
+        
+
+    pass
