@@ -134,6 +134,15 @@ def calculate_neutral_mutations(codon):
 
     return neutral_count
 
+def calculate_non_neutral_mutations(codon):
+    non_neutral_count = 0
+    single_mutations = get_mutation_list(codon)
+
+    for mutation in single_mutations:
+        if codon_wheel[mutation] != codon_wheel[codon]:
+            non_neutral_count += 1
+
+    return non_neutral_count
 
 def check_for_neutral_mutations(genome):
     codon = ""
@@ -153,6 +162,7 @@ def check_for_neutral_mutations(genome):
     plt.savefig("plots/neutral_amino_acid_count_per_codon.jpg")
     plt.show()
 
+
     return amino_acid_sequence
 
 
@@ -161,6 +171,31 @@ def mutation_network(amino_acid_seq, n_mutations):
         n_mutations = 0
 
     for codon in amino_acid_seq:
-        
+        pass
 
-    pass
+def spike_protein_mutations(genome):
+    codon = ""
+
+    #for only one mutation
+    no_of_sequecnces_one_mutation_away = 0
+    for nucleotide in genome:
+        if len(codon) < 3:
+            codon += nucleotide.upper()
+        else:
+            non_neutral_mutations = calculate_non_neutral_mutations(codon)
+            no_of_sequecnces_one_mutation_away = no_of_sequecnces_one_mutation_away + non_neutral_mutations
+            codon = nucleotide.upper()
+
+    #for 2-15 mutations away
+
+    codon=""
+    # for i in range(2,16):
+    #     for _ in i:
+    #         for nucleotide in genome:
+    #             if len(codon) < 3:
+    #                 codon += nucleotide.upper()
+    #             else:
+
+
+    return no_of_sequecnces_one_mutation_away
+
