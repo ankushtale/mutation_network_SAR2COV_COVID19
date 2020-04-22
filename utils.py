@@ -1,6 +1,6 @@
 import itertools
 import matplotlib.pylab as plt
-
+from math import log
 available_genome_sequences = ["wuhan", "philippines"]
 codon_wheel = {
     "TTT": "F",
@@ -134,6 +134,18 @@ def calculate_neutral_mutations(codon):
 
     return neutral_count
 
+def calculate_non_neutral_mutations_with_mutated_codons(codon):
+    neutral_count = 0
+    mutated_codons=[]
+    single_mutations = get_mutation_list(codon)
+
+    for mutation in single_mutations:
+        if codon_wheel[mutation] != codon_wheel[codon]:
+            neutral_count += 1
+            mutated_codons.append(mutation)
+
+    return neutral_count,mutated_codons
+
 def calculate_non_neutral_mutations(codon):
     non_neutral_count = 0
     single_mutations = get_mutation_list(codon)
@@ -183,19 +195,46 @@ def spike_protein_mutations(genome):
             codon += nucleotide.upper()
         else:
             non_neutral_mutations = calculate_non_neutral_mutations(codon)
+            print(non_neutral_mutations)
             no_of_sequecnces_one_mutation_away = no_of_sequecnces_one_mutation_away + non_neutral_mutations
             codon = nucleotide.upper()
 
     #for 2-15 mutations away
-
+    final = [no_of_sequecnces_one_mutation_away]
     codon=""
-    # for i in range(2,16):
-    #     for _ in i:
-    #         for nucleotide in genome:
-    #             if len(codon) < 3:
-    #                 codon += nucleotide.upper()
-    #             else:
+    x=[1]
+    for i in range(1,4):
+        possible_sequences = [genome]
+        i += 1
+        x.append(i)
+        print("checking possibilities for ", i , " mutations away ")
+        for _ in range(0,i):
+            temp=[]
+
+            for sequence in possible_sequences:
+                for nucleotide_index in range(0,len(sequence)):
+                    # temp_seq=sequence
+                    if len(codon) < 3:
+                        codon += sequence[nucleotide_index].upper()
+                    else:
+                        non_neutral_mutations,mutated_codons = calculate_non_neutral_mutations_with_mutated_codons(codon)
+                        # no_of_sequecnces_one_mutation_away = no_of_sequecnces_one_mutation_away + non_neutral_mutations
+                        codon = sequence[nucleotide_index].upper()
+                        for new_codon in mutated_codons:
+                            # temp_seq = sequence
+                            # temp_seq[nucleotide_index-3] = new_codon[0]
+                            # temp_seq[nucleotide_index - 2] = new_codon[1]
+                            # temp_seq[nucleotide_index - 1] = new_codon[2]
+                            temp.append(sequence[:nucleotide_index-3] + codon + sequence[nucleotide_index:])
+            possible_sequences=temp
+
+        final.append(len(possible_sequences))
+    # y = [log(y, 10) for y in final]
+    # print(y)
+    # plt.plot(x, y)
+    # plt.xticks(x, x, rotation='vertical')
+    # plt.savefig("plots/neutral_amino_acid_count_per_codon.jpg")
+    # plt.show()
 
 
-    return no_of_sequecnces_one_mutation_away
-
+    return final
