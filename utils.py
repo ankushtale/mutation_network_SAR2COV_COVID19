@@ -282,3 +282,17 @@ def spike_protein_mutations(genome):
 
     return final
 
+def question_4_log_values_for_non_neutral():
+    #this method calculates the non neutral sequencec=s from 1 to 15 mutations away and writes log values in txt file
+    
+    f = open("logvalues.txt", "w+")
+
+    possible_sequences=[]
+    for i in range(1,16):
+        print(i, )
+        # comb = itertools.combinations([1,2,3,4,5,6,1,2,3,4,5,6,7,8,2], i)
+        # possible_sequences.append(log(len(list(comb)*int(pow(3,i))),10))
+        possible_sequences.append(log(int(pow(15,i)*pow(3, i)), 10))
+        f.write("%f\n" % possible_sequences[-1])
+    print(possible_sequences)
+
